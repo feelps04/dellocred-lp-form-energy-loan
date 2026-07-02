@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empréstimo na Conta de Luz</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #0065FF; --success: #24DCB3; }
+    body { background: #f0f2f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; }
+    .block-more { background: #fff; border-radius: 20px; padding: 28px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); max-width: 520px; width: 100%; margin: 0 auto; border: none; }
+    .more { display: block; background: #FF551F; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; border-radius: 4px; margin-bottom: 16px; text-align: center; width: 100%; }
+    .block-img { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+    .block-img .icon-computer { width: 55px; height: 55px; background: #E8F4FD; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .block-img .icon-computer i { font-size: 28px; color: var(--primary); }
+    .block-img h3 { font-size: 20px; font-weight: 700; color: var(--primary); margin: 0; }
+    .block-content p { color: #555; font-size: 15px; margin-bottom: 20px; line-height: 1.5; }
+    .block-content p b { color: #222; }
+    .form-control { border-radius: 20px; border: 1px solid #ddd; padding: 10px 16px; font-size: 14px; height: 44px; }
+    .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 0.15rem rgba(0, 101, 255, 0.25); }
+    .btn-success { background: var(--primary); border: none; border-radius: 25px; padding: 12px 20px; font-size: 16px; font-weight: 600; width: 100%; color: #fff; height: 50px; }
+    .btn-success:hover { background: #0052cc; color: #fff; }
+    .btn-success:disabled { opacity: 0.6; cursor: not-allowed; }
+    .text-muted.small { font-size: 12px; line-height: 1.5; }
+    .erro { background: #fff5f5; border: 1px solid #f5c2c7; border-radius: 8px; padding: 12px 14px; color: #dc3545; font-size: 14px; margin-top: 14px; display: none; }
+    .erro.show { display: block; }
+    .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; }
+    .loading-overlay.show { display: flex; }
+    .loading-box { background: #fff; border-radius: 12px; padding: 30px 40px; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,0.2); max-width: 360px; }
+    .spinner-lg { width: 48px; height: 48px; border: 4px solid #dee2e6; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; position: relative; }
+    .spinner-lg::before { content: ''; position: absolute; inset: -4px; border: 4px solid transparent; border-top-color: var(--success); border-radius: 50%; animation: spin 1.2s linear infinite reverse; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-box p { color: #555; font-size: 15px; margin: 0; }
+    .loading-box .step { color: var(--primary); font-weight: 600; font-size: 13px; margin-top: 8px; }
+    .btn-whatsapp { background: #25D366; border: none; border-radius: 25px; height: 50px; font-size: 16px; font-weight: 700; color: #fff; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none !important; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); transition: background 0.2s; }
+    .btn-whatsapp:hover { background: #20ba59; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="col-12 col-md-12 col-lg-6">
+    <div class="block block-more">
+      <div class="more text-uppercase">Liberação em até 2 horas!</div>
+      <div class="block-img d-flex flex-column flex-sm-row align-items-center justify-content-center text-center text-sm-left">
+        <img src="https://dellocred.com/wp-content/uploads/2026/01/Dellocred_Logo_1-1024x261.png" alt="Dellocred" width="120" height="30">
+        <h3 class="text-primary ml-sm-2 mt-2 mt-sm-0" style="font-size: 18px;">
+          Empréstimo na Conta de Luz
+        </h3>
+      </div>
+      <div class="block-content" id="blockContent">
+        <div>
+          <p>
+            Saiba qual <b>valor</b> pode ser <b>liberado</b> pra você <b>em minutos</b>.
+          </p>
+        </div>
+      </div>
+      <form id="formSimulacao" class="form">
+        <div class="mt-2">
+          <div class="row mt-3 mt-md-3">
+            <div class="col-lg-12 col-12">
+              <input type="text" id="nome" class="form-control" placeholder="Seu Nome" required>
+            </div>
+            <div class="col-lg-6 col-12 mt-lg-2 mt-1 mt-md-1">
+              <input type="tel" id="cpf" class="form-control" placeholder="CPF" maxlength="14" required>
+            </div>
+            <div class="col-lg-6 col-12 mt-lg-2 mt-1 mt-md-1">
+              <input type="tel" id="nascimento" class="form-control" placeholder="Data Nascimento" maxlength="10" required>
+            </div>
+          </div>
+          <div class="row mt-1 mt-lg-2">
+            <div class="col-lg-12 col-12">
+              <input type="tel" id="cep" class="form-control" placeholder="CEP" maxlength="9" required>
+            </div>
+          </div>
+          <div class="row mt-1 mt-lg-2">
+            <div class="col-lg-6 col-12">
+              <input type="tel" id="telefone" class="form-control" placeholder="WhatsApp" maxlength="15" required>
+            </div>
+            <div class="col-lg-6 col-12">
+              <select id="companhiaEnergia" class="form-control" required>
+                <option value="" selected>Companhia de Energia</option>
+                <option value="Enel-RJ">Enel RJ</option>
+                <option value="Enel-SP">Enel SP</option>
+                <option value="Enel-CE">Enel Ceará</option>
+                <option value="CPFL">CPFL</option>
+                <option value="COELBA">COELBA</option>
+                <option value="COSERN">COSERN</option>
+                <option value="CELPE">CELPE</option>
+                <option value="RGE-SUL">RGE/SUL</option>
+                <option value="Elektro">Elektro</option>
+                <option value="Copel">Copel</option>
+                <option value="other">Outras Companhias</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mt-1 mt-lg-2">
+            <div class="col-lg-12 col-12">
+              <select id="contaNoNome" class="form-control" required>
+                <option value="" selected>A conta de luz está no seu nome?</option>
+                <option value="sim">Sim</option>
+                <option value="não">Não</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="erro" id="erro"></div>
+
+          <div class="row mt-4 justify-content-center align-items-center">
+            <div class="col-12 col-lg-12">
+              <div class="mb-2">
+                <button type="submit" class="btn btn-success px-md-4 px-0 form-control" id="btnSimular">
+                  Receber Simulação <i class="fab fa-whatsapp ml-2" style="font-size: 20px"></i>
+                </button>
+              </div>
+              <small class="text-muted text-xs">
+                Ao me cadastrar concordo com a <a href="#">política de privacidade</a> e o <a href="#">termo de consentimento.</a>
+              </small>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div id="sucessoContainer" class="text-center mt-3" style="display: none;">
+        <div class="mb-4">
+          <i class="fas fa-check-circle text-success" style="font-size: 60px;"></i>
+        </div>
+        <h4 class="font-weight-bold text-success mb-3">Simulação Aprovada!</h4>
+        <p class="text-muted mb-4" style="font-size: 15px; line-height: 1.5;">
+          Sua simulação foi pré-aprovada com sucesso. Para ver o limite liberado e finalizar o seu atendimento, fale com nosso especialista no WhatsApp.
+        </p>
+        <a id="btnWhatsapp" href="#" class="btn btn-whatsapp">
+          Fale com um especialista Dellocred <i class="fab fa-whatsapp ml-2" style="font-size: 20px;"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-box">
+      <div class="spinner-lg"></div>
+      <p id="loadingText">Analisando sua solicitação...</p>
+      <div class="step" id="loadingStep">Pré-análise de crédito</div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const BASE = window.location.pathname.replace(/\/$/, '');
+    const form = document.getElementById('formSimulacao');
+    const btnSimular = document.getElementById('btnSimular');
+    const erroDiv = document.getElementById('erro');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    document.getElementById('cpf').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').substring(0, 11);
+      v = v.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      e.target.value = v;
+    });
+
+    document.getElementById('nascimento').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').substring(0, 8);
+      v = v.replace(/(\d{2})(\d)/, '$1/$2').replace(/(\d{2})(\d)/, '$1/$2');
+      e.target.value = v;
+    });
+
+    document.getElementById('telefone').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').substring(0, 11);
+      if (v.length > 6) v = `(${v.substring(0,2)}) ${v.substring(2,7)}-${v.substring(7)}`;
+      else if (v.length > 2) v = `(${v.substring(0,2)}) ${v.substring(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      e.target.value = v;
+    });
+
+    document.getElementById('cep').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').substring(0, 8);
+      v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      e.target.value = v;
+    });
+
+    document.getElementById('cep').addEventListener('blur', async function(e) {
+      const cep = e.target.value.replace(/\D/g, '');
+      if (cep.length !== 8) return;
+      try {
+        const res = await fetch(`${BASE}/api/cep/${cep}`);
+        const d = await res.json();
+        if (d.success) {
+          mostrarErro('', false);
+        } else {
+          mostrarErro('CEP não encontrado ou inválido');
+        }
+      } catch(err) {
+        mostrarErro('CEP não encontrado ou inválido');
+      }
+    });
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (document.getElementById('contaNoNome').value !== 'sim') { mostrarErro('Somente o titular pode solicitar empréstimos na conta de luz'); return; }
+      const nome = document.getElementById('nome').value.trim();
+      const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+      const np = document.getElementById('nascimento').value.split('/');
+      const nascimento = `${np[2]}-${np[1]}-${np[0]}`;
+      const telefone = document.getElementById('telefone').value.replace(/\D/g, '');
+      const companhia = document.getElementById('companhiaEnergia').value;
+      const cep = document.getElementById('cep').value.replace(/\D/g, '');
+      if (cpf.length !== 11) { mostrarErro('CPF inválido'); return; }
+      if (np.length !== 3 || np[2].length !== 4) { mostrarErro('Informe a data de nascimento no formato DD/MM/AAAA'); return; }
+      if (telefone.length < 10) { mostrarErro('WhatsApp inválido'); return; }
+      if (!companhia) { mostrarErro('Selecione a Companhia de Energia'); return; }
+      if (cep.length !== 8) { mostrarErro('CEP inválido'); return; }
+      btnSimular.disabled = true;
+      erroDiv.classList.remove('show');
+      showLoading('Enviando pré-análise...', 'Conectando ao motor de crédito');
+
+      try {
+        const r = await fetch(`${BASE}/api/simular`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, cpf, nascimento, telefone, companhia, cep })
+        });
+        const d = await r.json();
+        if (!d.success) { hideLoading(); mostrarErro(d.errors?.join(', ')); btnSimular.disabled = false; return; }
+        updateLoading('Analisando sua solicitação...', `Processo #${d.data.processoId} em andamento`);
+        await poll(d.data.processoId, d.data.propostaId, nome, cpf, nascimento, telefone);
+      } catch { hideLoading(); mostrarErro('Erro de conexão. Tente novamente.'); btnSimular.disabled = false; }
+    });
+
+    async function poll(processoId, propostaId, nome, cpf, nascimento, telefone, i) {
+      i = i || 0;
+      if (i >= 120) { hideLoading(); mostrarErro('Tempo limite da análise. Tente novamente mais tarde.'); btnSimular.disabled = false; return; }
+      const msgs = ['Consulta ao bureau de crédito', 'Análise de risco', 'Verificação de renda', 'Seleção de produtos', 'Finalizando análise'];
+      updateLoading('Analisando sua solicitação...', msgs[Math.min(Math.floor(i / 6), msgs.length - 1)]);
+      try {
+        const r = await fetch(`${BASE}/api/status/${processoId}`);
+        const d = await r.json();
+        if (d.success && d.data?.status === 'Concluido') {
+          if (d.data.resultado?.success) {
+            hideLoading();
+            const msg = encodeURIComponent(`Olá! Meu nome é ${nome}.\nCPF: ${cpf}\nNascimento: ${nascimento}\nWhatsApp: ${telefone}\nGostaria de simular um empréstimo na conta de luz.`);
+            const whatsappUrl = `https://wa.me/553597082862?text=${msg}`;
+
+            document.getElementById('btnWhatsapp').href = whatsappUrl;
+            document.getElementById('blockContent').style.display = 'none';
+            form.style.display = 'none';
+            document.getElementById('sucessoContainer').style.display = 'block';
+
+            btnSimular.disabled = false;
+            form.reset();
+          } else {
+            hideLoading();
+            mostrarErro(d.data.resultado?.errors?.join(', ') || 'Infelizmente não foi possível liberar crédito para este cliente.');
+            btnSimular.disabled = false;
+          }
+          return;
+        }
+      } catch {}
+      setTimeout(() => poll(processoId, propostaId, nome, cpf, nascimento, telefone, i + 1), 5000);
+    }
+
+    function showLoading(t, s) { document.getElementById('loadingText').textContent = t; document.getElementById('loadingStep').textContent = s; loadingOverlay.classList.add('show'); }
+    function updateLoading(t, s) { document.getElementById('loadingText').textContent = t; document.getElementById('loadingStep').textContent = s; }
+    function hideLoading() { loadingOverlay.classList.remove('show'); }
+    function mostrarErro(m) { erroDiv.textContent = m; erroDiv.classList.add('show'); }
+  </script>
+</body>
+</html>
